@@ -9,19 +9,22 @@ const jobRoutes = require("./routes/jobRoutes");
 const app = express();
 
 // 1. Connect to MongoDB 
-// Using the new credentials updated in Railway variables
 connectDB();
 
 // 2. Middlewares
-app.use(cors()); // Enables cross-origin requests
-app.use(express.json()); // Allows server to accept JSON data
+app.use(cors()); 
+app.use(express.json()); 
 
-// 3. Routes
-app.use("/api/auth", authRoutes); // Authentication routes
-app.use("/api/jobs", jobRoutes); // Job routes
+// 3. Health Check Route (ரயில்வே எரர் வராமல் தடுக்க இது மிக முக்கியம்)
+app.get("/", (req, res) => {
+    res.send("Backend server is running successfully!");
+});
 
-// 4. Server Port Configuration 
-// Configured with '0.0.0.0' and port 8080 for Railway deployment
+// 4. API Routes
+app.use("/api/auth", authRoutes); 
+app.use("/api/jobs", jobRoutes); 
+
+// 5. Server Port Configuration 
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, '0.0.0.0', () => {
