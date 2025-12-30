@@ -8,23 +8,27 @@ const jobRoutes = require("./routes/jobRoutes");
 
 const app = express();
 
-// 1. Connect to MongoDB 
+// 1. Database Connection
 connectDB();
 
-// 2. Middlewares
-app.use(cors()); 
-app.use(express.json()); 
+// 2. Middlewares and CORS Configuration
+app.use(cors({
+  origin: ["http://localhost:5173", "https://surya-mainproject-backend-production.up.railway.app"], 
+  credentials: true
+}));
 
-// 3. Health Check Route (ரயில்வே எரர் வராமல் தடுக்க இது மிக முக்கியம்)
+app.use(express.json());
+
+// 3. Health Check Route for Railway Deployment
 app.get("/", (req, res) => {
     res.send("Backend server is running successfully!");
 });
 
-// 4. API Routes
-app.use("/api/auth", authRoutes); 
-app.use("/api/jobs", jobRoutes); 
+// 4. API Routes Initialization
+app.use("/api/auth", authRoutes);
+app.use("/api/jobs", jobRoutes);
 
-// 5. Server Port Configuration 
+// 5. Server Port Setup
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, '0.0.0.0', () => {
