@@ -4,27 +4,26 @@ require("dotenv").config();
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
-// 1. Import the new Job Routes
-const jobRoutes = require("./routes/jobRoutes"); 
+const jobRoutes = require("./routes/jobRoutes");
 
 const app = express();
 
-// Connect to MongoDB
+// 1. Connect to MongoDB 
+// Using the new credentials updated in Railway variables
 connectDB();
 
-// Middlewares
+// 2. Middlewares
 app.use(cors()); // Enables cross-origin requests
 app.use(express.json()); // Allows server to accept JSON data
 
-// Routes
+// 3. Routes
 app.use("/api/auth", authRoutes); // Authentication routes
+app.use("/api/jobs", jobRoutes); // Job routes
 
-// 2. Add the Job routes to the middleware
-// This will link http://localhost:5000/api/jobs to your jobRoutes.js file
-app.use("/api/jobs", jobRoutes); 
+// 4. Server Port Configuration 
+// Configured with '0.0.0.0' and port 8080 for Railway deployment
+const PORT = process.env.PORT || 8080;
 
-// Server Port Configuration
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
 });
